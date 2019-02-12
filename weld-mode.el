@@ -63,7 +63,8 @@
       (when (and (looking-at indentation-decreasers)
                  (>= indent-col weld-indent-offset))
         (setq indent-col (- indent-col weld-indent-offset))))
-    (indent-line-to indent-col)))
+    (save-excursion
+      (indent-line-to indent-col))))
 
 ;;;###autoload
 (define-derived-mode weld-mode c-mode "weld mode"
@@ -73,7 +74,7 @@
   (setq font-lock-defaults '((weld-font-lock-keywords)))
 
   (setq-local comment-start "#")
-  (font-lock-add-keywords nil '(("#.+" . font-lock-comment-face)))
+  (font-lock-add-keywords nil '(("#.*" . font-lock-comment-face)))
 
   ;; Indentation
   (set (make-local-variable 'indent-line-function) 'weld-indent-line)  

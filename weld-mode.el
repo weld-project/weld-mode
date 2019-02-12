@@ -28,22 +28,14 @@
 	    )
 
         `(
-          (,weld-keywords-regexp . font-lock-keyword-face)
           (,weld-types-regexp . font-lock-type-face)
+          (,weld-keywords-regexp . font-lock-keyword-face)
           (,weld-collections-regexp . font-lock-type-face)
           (,weld-bools-regexp . font-lock-constant-face)
           (,weld-builders-regexp . font-lock-preprocessor-face)
           (,weld-let-regexp . (1 font-lock-variable-name-face))
           (,weld-numbers-regexp . font-lock-constant-face)
           )))
-
-;; Comments
-(setq weld-mode-syntax-table
-      (let ( (synTable (make-syntax-table)))
-        ;; python style comment: “# …”
-        (modify-syntax-entry ?# "<" synTable)
-        (modify-syntax-entry ?\n ">" synTable)
-        synTable))
 
 ;;;###autoload
 (define-derived-mode weld-mode c-mode "weld mode"
@@ -52,8 +44,9 @@
   ;; Syntax highlighting
   (setq font-lock-defaults '((weld-font-lock-keywords)))
 
-  ;; Comments
-  (set-syntax-table weld-mode-syntax-table)
+  ;; Indentation
+  '(require smie)
+  (smie-setup nil #'ignore)
 )
      
 ;; add the mode to the `features' list

@@ -37,6 +37,34 @@
           (,weld-numbers-regexp . font-lock-constant-face)
           )))
 
+;; Indentation.
+;; Simple rules:
+;;  - each new indentation level indents by 2 spaces
+;;  - indentation level is entered with (, |, or { and
+;;    exited on matching close
+(defvar weld-indent-offset 4)
+
+(defun weld-indent-line ()
+  (interactive)
+  (let ((indent-col 0)
+        (indentation-increasers "[{(]")
+        (indentation-decreasers "[})]")
+        )
+    (save-excursion
+      (beginning-of-line)
+      (condition-case nil
+          (while t
+            (backward-up-list 1)
+            (when (looking-at indentation-increasers)
+              (setq indent-col (+ indent-col weld-indent-offset))))
+        (error nil)))
+    (save-excursion
+      (back-to-indentation)
+      (when (and (looking-at indentation-decreasers)
+                 (>= indent-col weld-indent-offset))
+        (setq indent-col (- indent-col weld-indent-offset))))
+    (indent-line-to indent-col)))
+
 ;;;###autoload
 (define-derived-mode weld-mode c-mode "weld mode"
   "Major mode for editing Weld code."
@@ -48,8 +76,7 @@
   (font-lock-add-keywords nil '(("#.+" . font-lock-comment-face)))
 
   ;; Indentation
-  '(require smie)
-  (smie-setup nil #'ignore)
+  (set (make-local-variable 'indent-line-function) 'weld-indent-line)  
 )
      
 ;; add the mode to the `features' list

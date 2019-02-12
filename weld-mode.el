@@ -44,6 +44,9 @@
   ;; Syntax highlighting
   (setq font-lock-defaults '((weld-font-lock-keywords)))
 
+  (setq-local comment-start "#")
+  (font-lock-add-keywords nil '(("#.+" . font-lock-comment-face)))
+
   ;; Indentation
   '(require smie)
   (smie-setup nil #'ignore)

@@ -37,6 +37,13 @@
           (,weld-numbers-regexp . font-lock-constant-face)
           )))
 
+;; Comments
+(setq weld-mode-syntax-table
+      (let ( (synTable (make-syntax-table)))
+        ;; python style comment: “# …”
+        (modify-syntax-entry ?# "<" synTable)
+        (modify-syntax-entry ?\n ">" synTable)
+        synTable))
 
 ;;;###autoload
 (define-derived-mode weld-mode c-mode "weld mode"
@@ -44,6 +51,9 @@
 
   ;; Syntax highlighting
   (setq font-lock-defaults '((weld-font-lock-keywords)))
+
+  ;; Comments
+  (set-syntax-table weld-mode-syntax-table)
 )
      
 ;; add the mode to the `features' list
